@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using Devcade;
 
 // MAKE SURE YOU RENAME ALL PROJECT FILES FROM DevcadeGame TO YOUR YOUR GAME NAME
-namespace DevcadeGame
+namespace ConsumptionGame
 {
 	public class Game1 : Game
 	{
