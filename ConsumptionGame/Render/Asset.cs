@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework.Graphics;
 
-namespace ConsumptionGame.App;
+namespace ConsumptionGame.Render;
 
 public static class Asset {
     public static Texture2D Player;

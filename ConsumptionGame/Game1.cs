@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using Devcade;
 
 using ConsumptionGame.App;
+using ConsumptionGame.Render;
 
 // MAKE SURE YOU RENAME ALL PROJECT FILES FROM DevcadeGame TO YOUR YOUR GAME NAME
 namespace ConsumptionGame;
@@ -18,8 +19,7 @@ public class Game1 : Game
 	/// </summary>
 	private Rectangle windowSize;
 
-	private Vector2 PlayerPos;
-	private int PlayerSize = 100;
+	private Player player;
 	
 	/// <summary>
 	/// Game constructor
@@ -30,6 +30,7 @@ public class Game1 : Game
 		Content.RootDirectory = "Content";
 		IsMouseVisible = false;
 		Window.AllowUserResizing = true;
+		player = new();
 	}
 
 	/// <summary>
@@ -92,13 +93,18 @@ public class Game1 : Game
 
 		KeyboardState keys = Keyboard.GetState();
 
-		if (keys.IsKeyDown(Keys.W) || keys.IsKeyDown(Keys.Up)) PlayerPos.Y--;
-		if (keys.IsKeyDown(Keys.S) || keys.IsKeyDown(Keys.Down)) PlayerPos.Y++;
-		if (keys.IsKeyDown(Keys.A) || keys.IsKeyDown(Keys.Left)) PlayerPos.X--;
-		if (keys.IsKeyDown(Keys.D) || keys.IsKeyDown(Keys.Right)) PlayerPos.X++;
+		// Avoiding CS1612. I hate it.
+		Vector2 pos = player.WorldPosition;
 
-		PlayerSize++;
-		if (PlayerSize > 150) PlayerSize = 50;
+		if (keys.IsKeyDown(Keys.W) || keys.IsKeyDown(Keys.Up)) pos.Y--;
+		if (keys.IsKeyDown(Keys.S) || keys.IsKeyDown(Keys.Down)) pos.Y++;
+		if (keys.IsKeyDown(Keys.A) || keys.IsKeyDown(Keys.Left)) pos.X--;
+		if (keys.IsKeyDown(Keys.D) || keys.IsKeyDown(Keys.Right)) pos.X++;
+
+		player.WorldPosition = pos;
+
+		player.Size++;
+		if (player.Size > 150) player.Size = 50;
 
 		// TODO: Add your update logic here
 
@@ -116,7 +122,7 @@ public class Game1 : Game
 		// Batches all the draw calls for this frame, and then performs them all at once
 		_spriteBatch.Begin();
 		
-		Display.Player(PlayerPos, PlayerSize);
+		Display.Player(player.WorldPosition, (int)player.Size);
 		
 		_spriteBatch.End();
 
