@@ -18,8 +18,6 @@ public class Game1 : Game
 	/// Stores the window dimensions in a rectangle object for easy use
 	/// </summary>
 	private Rectangle windowSize;
-
-	private Player player;
 	
 	/// <summary>
 	/// Game constructor
@@ -30,7 +28,6 @@ public class Game1 : Game
 		Content.RootDirectory = "Content";
 		IsMouseVisible = false;
 		Window.AllowUserResizing = true;
-		player = new();
 	}
 
 	/// <summary>
@@ -40,6 +37,7 @@ public class Game1 : Game
 	{
 		// Sets up the input library
 		Input.Initialize();
+		EdibleContainer.Initialize();
 
 		// Set window size if running debug (in release it will be fullscreen)
 		#region Set to Devcade Resolution
@@ -94,18 +92,17 @@ public class Game1 : Game
 		KeyboardState keys = Keyboard.GetState();
 
 		// Avoiding CS1612. I hate it.
-		Vector2 pos = player.WorldPosition;
+		Player p = EdibleContainer.PlayingEdible;
+		Vector2 pos = p.WorldPosition;
 
-		if (keys.IsKeyDown(Keys.W) || keys.IsKeyDown(Keys.Up)) pos.Y--;
-		if (keys.IsKeyDown(Keys.S) || keys.IsKeyDown(Keys.Down)) pos.Y++;
-		if (keys.IsKeyDown(Keys.A) || keys.IsKeyDown(Keys.Left)) pos.X--;
-		if (keys.IsKeyDown(Keys.D) || keys.IsKeyDown(Keys.Right)) pos.X++;
+		if (keys.IsKeyDown(Keys.W) || keys.IsKeyDown(Keys.Up)) pos.Y -= p.Speed;;
+		if (keys.IsKeyDown(Keys.S) || keys.IsKeyDown(Keys.Down)) pos.Y += p.Speed;
+		if (keys.IsKeyDown(Keys.A) || keys.IsKeyDown(Keys.Left)) pos.X -= p.Speed;
+		if (keys.IsKeyDown(Keys.D) || keys.IsKeyDown(Keys.Right)) pos.X += p.Speed;
 
-		player.WorldPosition = pos;
+		p.WorldPosition = pos;
 
-		player.Size++;
-		if (player.Size > 150) player.Size = 50;
-
+		EdibleContainer.Update(gameTime);
 		// TODO: Add your update logic here
 
 		base.Update(gameTime);
@@ -122,8 +119,13 @@ public class Game1 : Game
 		// Batches all the draw calls for this frame, and then performs them all at once
 		_spriteBatch.Begin();
 		
-		Display.Player(player.WorldPosition, (int)player.Size);
-		
+		Display.Player(EdibleContainer.PlayingEdible);
+		foreach (Edible e in EdibleContainer.Edibles) {
+			if (e is null) continue;
+			Display.Edible(e);
+		}
+
+
 		_spriteBatch.End();
 
 		base.Draw(gameTime);

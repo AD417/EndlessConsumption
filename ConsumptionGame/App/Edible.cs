@@ -11,12 +11,19 @@ public class Edible {
     public float Density { get; protected set; }
     public TimeSpan AliveTime { get; protected set; }
 
+    public Color RenderColor { get; }
+
     public float Mass {
             // TODO: Check balancing of using ^2 vs ^3. 
         get => Size * Size * Density;
     }
 
+    public Edible(Vector2 pos, float size, Color color) : this(pos, size) {
+        RenderColor = color;
+    }
+
     public Edible(Vector2 pos, float size) {
+        RenderColor = Color.White;
         WorldPosition = pos;
         Size = size;
         Density = 1;
@@ -25,13 +32,13 @@ public class Edible {
         Rotation = MathHelper.PiOver2;
     }
 
-    public void Update(GameTime gameTime) {
+    public virtual void Update(GameTime gameTime) {
         AliveTime += gameTime.ElapsedGameTime;
     }
 
     public bool Intersects(Edible other) {
-        float distanceSquared = (this.WorldPosition - other.WorldPosition).LengthSquared();
-        float sizeSumSquared = (this.Size + other.Size) * (this.Size + other.Size) * 0.25f;
-        return (distanceSquared >= sizeSumSquared);
+        float distance = (this.WorldPosition - other.WorldPosition).Length();
+        float sizeSum = MathF.Abs(this.Size + other.Size) * 0.5f;
+        return (distance < sizeSum);
     }
 }
