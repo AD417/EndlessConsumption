@@ -1,12 +1,14 @@
 using System;
 using Microsoft.Xna.Framework;
 
+using ConsumptionGame.App.Util;
+
 namespace ConsumptionGame.App;
 
 public class Edible {
-    public Vector2 WorldPosition {get; /*protected*/ set; }
+    public BigVector WorldPosition {get; /*protected*/ set; }
     public float Rotation { get; protected set; }
-    // TODO: figure out how we can use Doubles or larger with Vectors -- do we need to overload Vector2?
+    // TODO: figure out how we can use Doubles or larger with Vectors -- do we need to overload BigVector?
     public float Size {get; /*protected*/ set; }
     public float Density { get; protected set; }
     public TimeSpan AliveTime { get; protected set; }
@@ -18,11 +20,11 @@ public class Edible {
         get => Size * Size * Density;
     }
 
-    public Edible(Vector2 pos, float size, Color color) : this(pos, size) {
+    public Edible(BigVector pos, float size, Color color) : this(pos, size) {
         RenderColor = color;
     }
 
-    public Edible(Vector2 pos, float size) {
+    public Edible(BigVector pos, float size) {
         RenderColor = Color.White;
         WorldPosition = pos;
         Size = size;
@@ -37,8 +39,8 @@ public class Edible {
     }
 
     public bool Intersects(Edible other) {
-        float distance = (this.WorldPosition - other.WorldPosition).Length();
-        float sizeSum = MathF.Abs(this.Size + other.Size) * 0.5f;
+        double distance = (this.WorldPosition - other.WorldPosition).Length();
+        double sizeSum = MathF.Abs(this.Size + other.Size) * 0.5f;
         return (distance < sizeSum);
     }
 }

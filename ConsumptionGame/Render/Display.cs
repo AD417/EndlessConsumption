@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
 using ConsumptionGame.App;
+using ConsumptionGame.App.Util;
 
 namespace ConsumptionGame.Render;
 
@@ -12,13 +13,13 @@ class Display {
         Pen = sb;
     }
 
-    private static Vector2 ToScreenPos(Vector2 pos) {
+    private static Vector2 ToScreenPos(BigVector pos) {
         // TODO: determine how to fix scaling for larger screens.
-        return new Vector2(pos.X + 210, pos.Y + 490);
+        return new Vector2((float)pos.X + 210.0f, (float)pos.Y + 490.0f);
     }
 
     public static void Player(Player player) {
-        Vector2 pos = ToScreenPos(player.WorldPosition);
+        BigVector pos = ToScreenPos(player.WorldPosition);
         Rectangle bounds = new Rectangle(
             (int)(pos.X - player.Size / 2), 
             (int)(pos.Y - player.Size / 2), 

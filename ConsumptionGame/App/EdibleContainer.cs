@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
+using ConsumptionGame.App.Util;
+
 namespace ConsumptionGame.App;
 
 public static class EdibleContainer {
@@ -22,7 +24,7 @@ public static class EdibleContainer {
         int y = RNG.Next(-490, 490);
         int size = RNG.Next(50);
         Color c = new(RNG.Next(127, 255), RNG.Next(255), RNG.Next(255));
-        Edibles.Add(new Edible(new Vector2(x, y), size, c));
+        Edibles.Add(new Edible(new BigVector(x, y), size, c));
     }
 
     public static void Update(GameTime _gameTime) {

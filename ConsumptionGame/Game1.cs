@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using Devcade;
 
 using ConsumptionGame.App;
+using ConsumptionGame.App.Util;
 using ConsumptionGame.Render;
 
 // MAKE SURE YOU RENAME ALL PROJECT FILES FROM DevcadeGame TO YOUR YOUR GAME NAME
@@ -93,7 +94,7 @@ public class Game1 : Game
 
 		// Avoiding CS1612. I hate it.
 		Player p = EdibleContainer.PlayingEdible;
-		Vector2 pos = p.WorldPosition;
+		BigVector pos = p.WorldPosition;
 
 		if (keys.IsKeyDown(Keys.W) || keys.IsKeyDown(Keys.Up)) pos.Y -= p.Speed;;
 		if (keys.IsKeyDown(Keys.S) || keys.IsKeyDown(Keys.Down)) pos.Y += p.Speed;
