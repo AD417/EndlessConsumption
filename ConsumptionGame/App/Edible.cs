@@ -6,10 +6,41 @@ using ConsumptionGame.App.Util;
 namespace ConsumptionGame.App;
 
 public class Edible {
-    public BigVector WorldPosition {get; /*protected*/ set; }
+    private static Random RNG = new();
+    public double Size { get; }
+    public BigVector WorldPosition { get; private set; }
+    private TimeSpan AliveTime = new();
+    // public string Name { get; }
+    private Func<BigVector> MovementBehavior = BigVector() => BigVector.Zero;
+    public double Nutrition { get; } = 1.0;
+    public double Damage { get; private set; } = 0;
+    private Color InternalColor { get; }
+
+    public Edible(double size, BigVector pos) {
+        WorldPosition = pos;
+        Size = size;
+        InternalColor = new Color((uint)(0x80000000 + RNG.Next(0x7FFFFF)));
+
+    }
+    
+    public void Move(double dx, double dy) => Move(new BigVector(dx, dy));
+    public void Move(BigVector displacement) {
+        WorldPosition += displacement;
+    }
+
+    public void Update(GameTime gameTime) {
+        AliveTime += gameTime.ElapsedGameTime;
+    }
+
+}
+
+
+/*
+public class Edible {
+    public BigVector WorldPosition {get; protected set; }
     public float Rotation { get; protected set; }
     // TODO: figure out how we can use Doubles or larger with Vectors -- do we need to overload BigVector?
-    public float Size {get; /*protected*/ set; }
+    public float Size {get; protected set; }
     public float Density { get; protected set; }
     public TimeSpan AliveTime { get; protected set; }
 
@@ -43,4 +74,4 @@ public class Edible {
         double sizeSum = MathF.Abs(this.Size + other.Size) * 0.5f;
         return (distance < sizeSum);
     }
-}
+}*/

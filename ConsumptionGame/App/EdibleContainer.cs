@@ -13,18 +13,24 @@ public static class EdibleContainer {
     private static Random RNG = new();
 
     public static void Initialize() {
-        PlayingEdible = new();
+        PlayingEdible = new(1.0);
         Edibles = new List<Edible>();
 
         for (int i = 0; i < 25; i++) CreateRandomEdible();
     }
 
     private static void CreateRandomEdible() {
-        int x = RNG.Next(-210, 210);
-        int y = RNG.Next(-490, 490);
-        int size = RNG.Next(50);
-        Color c = new(RNG.Next(127, 255), RNG.Next(255), RNG.Next(255));
-        Edibles.Add(new Edible(new BigVector(x, y), size, c));
+        BigVector position = new BigVector(
+            1 - 2 * RNG.NextDouble(),
+            1 - 2 * RNG.NextDouble()
+        );
+        position *= 50 * PlayingEdible.Size;
+        position += PlayingEdible.WorldPosition;
+
+        double size = RNG.NextDouble() * 2.5 * PlayingEdible.Size;
+        if (RNG.Next() % 2 == 1) size *= 10;
+
+        Edibles.Add(new Edible(size, position));
     }
 
     public static void Update(GameTime _gameTime) {
@@ -35,7 +41,7 @@ public static class EdibleContainer {
         for (int i = Edibles.Count - 1; i >= 0; i--) {
             Edible edible = Edibles[i];
             if (!PlayingEdible.Intersects(edible)) continue;
-            PlayingEdible.Eat(edible);
+            PlayingEdible.Size += 1;
             Edibles.RemoveAt(i);
             CreateRandomEdible();
         }

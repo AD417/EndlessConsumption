@@ -37,6 +37,6 @@ class Display {
             (int)edible.Size, 
             (int)edible.Size
         );
-        Pen.Draw(Asset.Edible, bounds, new Rectangle(0, 0, 400, 400), edible.RenderColor);
+        Pen.Draw(Asset.Edible, bounds, new Rectangle(0, 0, 400, 400), Color.White);
     }
 }

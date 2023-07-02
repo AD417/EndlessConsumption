@@ -51,6 +51,7 @@ public struct BigVector : IEquatable<BigVector> {
     }
     public static BigVector Normalize(BigVector value) {
         double length = value.Length();
+        if (length == 0) return BigVector.Zero;
         return new BigVector(value.X / length, value.Y / length);
     }
     public static BigVector Subtract(BigVector value1, BigVector value2) {

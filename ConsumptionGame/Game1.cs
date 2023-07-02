@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Devcade;
+using MonoGame.Extended;
 
 using ConsumptionGame.App;
 using ConsumptionGame.App.Util;
@@ -94,15 +95,11 @@ public class Game1 : Game
 
 		// Avoiding CS1612. I hate it.
 		Player p = EdibleContainer.PlayingEdible;
-		BigVector pos = p.WorldPosition;
 
-		if (keys.IsKeyDown(Keys.W) || keys.IsKeyDown(Keys.Up)) pos.Y -= p.Speed;;
-		if (keys.IsKeyDown(Keys.S) || keys.IsKeyDown(Keys.Down)) pos.Y += p.Speed;
-		if (keys.IsKeyDown(Keys.A) || keys.IsKeyDown(Keys.Left)) pos.X -= p.Speed;
-		if (keys.IsKeyDown(Keys.D) || keys.IsKeyDown(Keys.Right)) pos.X += p.Speed;
-
-		p.WorldPosition = pos;
-
+		if (keys.IsKeyDown(Keys.W) || keys.IsKeyDown(Keys.Up)) p.Move(0, -1);
+		if (keys.IsKeyDown(Keys.S) || keys.IsKeyDown(Keys.Down)) p.Move(0, 1);
+		if (keys.IsKeyDown(Keys.A) || keys.IsKeyDown(Keys.Left)) p.Move(-1, 0);
+		if (keys.IsKeyDown(Keys.D) || keys.IsKeyDown(Keys.Right)) p.Move(1, 0);
 		EdibleContainer.Update(gameTime);
 		// TODO: Add your update logic here
 
