@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using MonoGame.Extended;
 
 using ConsumptionGame.App;
 using ConsumptionGame.App.Util;
@@ -8,6 +9,7 @@ namespace ConsumptionGame.Render;
 
 class Display {
     private static SpriteBatch Pen;
+    private static OrthographicCamera Camera;
 
     public static void Initialize(SpriteBatch sb) {
         Pen = sb;

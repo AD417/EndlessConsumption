@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Devcade;
 using MonoGame.Extended;
+using MonoGame.Extended.ViewportAdapters;
 
 using ConsumptionGame.App;
 using ConsumptionGame.App.Util;
@@ -15,6 +16,7 @@ public class Game1 : Game
 {
 	private GraphicsDeviceManager _graphics;
 	private SpriteBatch _spriteBatch;
+	private OrthographicCamera _camera;
 	
 	/// <summary>
 	/// Stores the window dimensions in a rectangle object for easy use
@@ -43,17 +45,25 @@ public class Game1 : Game
 
 		// Set window size if running debug (in release it will be fullscreen)
 		#region Set to Devcade Resolution
+		ViewportAdapter viewport;
 #if DEBUG
 		_graphics.PreferredBackBufferWidth = 420;
 		_graphics.PreferredBackBufferHeight = 980;
 		_graphics.ApplyChanges();
+		viewport = new BoxingViewportAdapter(Window, GraphicsDevice, 420, 980);
 #else
 		_graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
 		_graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
 		_graphics.ApplyChanges();
+		viewport = new BoxingViewportAdapter(
+				Window, 
+				GraphicsDevice, 
+				GraphicsDevice.DisplayMode.Width, 
+				GraphicsDevice.DisplayMode.Height
+		)
 #endif
 		#endregion
-		
+		_camera = new OrthographicCamera(viewport);
 		// TODO: Add your initialization logic here
 
 		windowSize = GraphicsDevice.Viewport.Bounds;
@@ -115,14 +125,13 @@ public class Game1 : Game
 		GraphicsDevice.Clear(Color.Black);
 		
 		// Batches all the draw calls for this frame, and then performs them all at once
-		_spriteBatch.Begin();
+		Matrix transformMatrix = _camera.GetViewMatrix();
+		_spriteBatch.Begin(transformMatrix: transformMatrix);
 		
 		Display.Player(EdibleContainer.PlayingEdible);
 		foreach (Edible e in EdibleContainer.Edibles) {
-			if (e is null) continue;
 			Display.Edible(e);
 		}
-
 
 		_spriteBatch.End();
 
