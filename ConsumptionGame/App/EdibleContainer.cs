@@ -20,7 +20,7 @@ public static class EdibleContainer {
     }
 
     private static void CreateRandomEdible() {
-        BigVector position = new BigVector(
+        Vector2 position = new Vector2(
             1 - 2 * RNG.NextDouble(),
             1 - 2 * RNG.NextDouble()
         );

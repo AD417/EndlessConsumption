@@ -8,23 +8,23 @@ namespace ConsumptionGame.App;
 public class Edible {
     private static Random RNG = new();
     public double Size { get; }
-    public BigVector WorldPosition { get; private set; }
+    public Vector2 WorldPosition { get; private set; }
     private TimeSpan AliveTime = new();
     // public string Name { get; }
-    private Func<BigVector> MovementBehavior = BigVector() => BigVector.Zero;
+    private Func<Vector2> MovementBehavior = Vector2() => Vector2.Zero;
     public double Nutrition { get; } = 1.0;
     public double Damage { get; private set; } = 0;
     private Color InternalColor { get; }
 
-    public Edible(double size, BigVector pos) {
+    public Edible(double size, Vector2 pos) {
         WorldPosition = pos;
         Size = size;
         InternalColor = new Color((uint)(0x80000000 + RNG.Next(0x7FFFFF)));
 
     }
     
-    public void Move(double dx, double dy) => Move(new BigVector(dx, dy));
-    public void Move(BigVector displacement) {
+    public void Move(double dx, double dy) => Move(new Vector2(dx, dy));
+    public void Move(Vector2 displacement) {
         WorldPosition += displacement;
     }
 
@@ -37,9 +37,9 @@ public class Edible {
 
 /*
 public class Edible {
-    public BigVector WorldPosition {get; protected set; }
+    public Vector2 WorldPosition {get; protected set; }
     public float Rotation { get; protected set; }
-    // TODO: figure out how we can use Doubles or larger with Vectors -- do we need to overload BigVector?
+    // TODO: figure out how we can use Doubles or larger with Vectors -- do we need to overload Vector2?
     public float Size {get; protected set; }
     public float Density { get; protected set; }
     public TimeSpan AliveTime { get; protected set; }
@@ -51,11 +51,11 @@ public class Edible {
         get => Size * Size * Density;
     }
 
-    public Edible(BigVector pos, float size, Color color) : this(pos, size) {
+    public Edible(Vector2 pos, float size, Color color) : this(pos, size) {
         RenderColor = color;
     }
 
-    public Edible(BigVector pos, float size) {
+    public Edible(Vector2 pos, float size) {
         RenderColor = Color.White;
         WorldPosition = pos;
         Size = size;

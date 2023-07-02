@@ -15,13 +15,13 @@ class Display {
         Pen = sb;
     }
 
-    private static Vector2 ToScreenPos(BigVector pos) {
+    private static Vector2 ToScreenPos(Vector2 pos) {
         // TODO: determine how to fix scaling for larger screens.
         return new Vector2((float)pos.X + 210.0f, (float)pos.Y + 490.0f);
     }
 
     public static void Player(Player player) {
-        BigVector pos = ToScreenPos(player.WorldPosition);
+        Vector2 pos = ToScreenPos(player.WorldPosition);
         Rectangle bounds = new Rectangle(
             (int)(pos.X - player.Size / 2), 
             (int)(pos.Y - player.Size / 2), 

@@ -14,7 +14,7 @@ public class Player {
         }
     }
     public double LargestSize { get; private set; }
-    public BigVector WorldPosition { get; private set; } = BigVector.Zero;
+    public Vector2 WorldPosition { get; private set; } = Vector2.Zero;
     public double EatMultiplier = 1.0;
 
     public Player(double size) {
@@ -22,8 +22,8 @@ public class Player {
         LargestSize = size;
     }
 
-    public void Move(double dx, double dy) => Move(new BigVector(dx, dy));
-    public void Move(BigVector displacement) {
+    public void Move(double dx, double dy) => Move(new Vector2(dx, dy));
+    public void Move(Vector2 displacement) {
         WorldPosition += displacement;
     }
 
