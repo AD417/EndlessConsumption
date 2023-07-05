@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Devcade;
@@ -6,7 +7,6 @@ using MonoGame.Extended;
 using MonoGame.Extended.ViewportAdapters;
 
 using ConsumptionGame.App;
-using ConsumptionGame.App.Util;
 using ConsumptionGame.Render;
 
 // MAKE SURE YOU RENAME ALL PROJECT FILES FROM DevcadeGame TO YOUR YOUR GAME NAME
@@ -64,6 +64,8 @@ public class Game1 : Game
 #endif
 		#endregion
 		_camera = new OrthographicCamera(viewport);
+		_camera.Zoom = 2;
+		System.Console.WriteLine(EdibleContainer.PlayingEdible.Size);
 		// TODO: Add your initialization logic here
 
 		windowSize = GraphicsDevice.Viewport.Bounds;
@@ -101,17 +103,44 @@ public class Game1 : Game
 			Exit();
 		}
 
+		EdibleContainer.CheckPopulation();
+
+		Player player = EdibleContainer.PlayingEdible;
+		for (int i = EdibleContainer.Edibles.Count - 1; i >= 0; i--) {
+			Edible e = EdibleContainer.Edibles[i];
+			e.Update(gameTime);
+			if (player.Intersects(e)) {
+				if (player.Size > e.Size) {
+					// *nom*
+					System.Console.WriteLine("NOM");
+					float invDivisor = 2 / MathF.Pow(player.Size / e.Size, 0.9F);
+					float sizeFactor = Math.Min(1, MathF.Pow(0.9F, MathF.Log10(player.Size)));
+					player.Size += e.Size * 0.1F * invDivisor * e.Nutrition * sizeFactor;
+					EdibleContainer.Edibles.RemoveAt(i);
+				} else {
+					System.Console.WriteLine("OW");
+					System.Console.WriteLine(gameTime.GetElapsedSeconds());
+					player.Size -= e.Size * gameTime.GetElapsedSeconds();
+					System.Console.WriteLine(player.Size);
+				}
+			}
+		}
+
+		// TODO: Camera resizing. 
+
+		// TODO: Camera movement.
+
+		// TODO: Player movement in a more easonable manner. 
+
+
 		KeyboardState keys = Keyboard.GetState();
 
-		// Avoiding CS1612. I hate it.
-		Player p = EdibleContainer.PlayingEdible;
+		if (keys.IsKeyDown(Keys.R) || player.isDead) EdibleContainer.Initialize();
 
-		if (keys.IsKeyDown(Keys.W) || keys.IsKeyDown(Keys.Up)) p.Move(0, -1);
-		if (keys.IsKeyDown(Keys.S) || keys.IsKeyDown(Keys.Down)) p.Move(0, 1);
-		if (keys.IsKeyDown(Keys.A) || keys.IsKeyDown(Keys.Left)) p.Move(-1, 0);
-		if (keys.IsKeyDown(Keys.D) || keys.IsKeyDown(Keys.Right)) p.Move(1, 0);
-		EdibleContainer.Update(gameTime);
-		// TODO: Add your update logic here
+		if (keys.IsKeyDown(Keys.W) || keys.IsKeyDown(Keys.Up)) player.Move(0, -player.Size * 0.1F);
+		if (keys.IsKeyDown(Keys.S) || keys.IsKeyDown(Keys.Down)) player.Move(0, player.Size * 0.1F);
+		if (keys.IsKeyDown(Keys.A) || keys.IsKeyDown(Keys.Left)) player.Move(-player.Size * 0.1F, 0);
+		if (keys.IsKeyDown(Keys.D) || keys.IsKeyDown(Keys.Right)) player.Move(player.Size * 0.1F, 0);
 
 		base.Update(gameTime);
 	}

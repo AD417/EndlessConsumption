@@ -7,23 +7,23 @@ namespace ConsumptionGame.App;
 
 public class Edible {
     private static Random RNG = new();
-    public double Size { get; }
+    public float Size { get; }
     public Vector2 WorldPosition { get; private set; }
     private TimeSpan AliveTime = new();
     // public string Name { get; }
     private Func<Vector2> MovementBehavior = Vector2() => Vector2.Zero;
-    public double Nutrition { get; } = 1.0;
-    public double Damage { get; private set; } = 0;
+    public float Nutrition { get; } = 1F;
+    public float Damage { get; private set; } = 1;
     private Color InternalColor { get; }
 
-    public Edible(double size, Vector2 pos) {
+    public Edible(float size, Vector2 pos) {
         WorldPosition = pos;
         Size = size;
         InternalColor = new Color((uint)(0x80000000 + RNG.Next(0x7FFFFF)));
 
     }
     
-    public void Move(double dx, double dy) => Move(new Vector2(dx, dy));
+    public void Move(float dx, float dy) => Move(new Vector2(dx, dy));
     public void Move(Vector2 displacement) {
         WorldPosition += displacement;
     }
@@ -70,8 +70,8 @@ public class Edible {
     }
 
     public bool Intersects(Edible other) {
-        double distance = (this.WorldPosition - other.WorldPosition).Length();
-        double sizeSum = MathF.Abs(this.Size + other.Size) * 0.5f;
+        float distance = (this.WorldPosition - other.WorldPosition).Length();
+        float sizeSum = MathF.Abs(this.Size + other.Size) * 0.5f;
         return (distance < sizeSum);
     }
 }*/
