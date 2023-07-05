@@ -64,7 +64,7 @@ public class Game1 : Game
 #endif
 		#endregion
 		_camera = new OrthographicCamera(viewport);
-		_camera.Zoom = 2;
+		_camera.Zoom = 50;
 		System.Console.WriteLine(EdibleContainer.PlayingEdible.Size);
 		// TODO: Add your initialization logic here
 
@@ -129,6 +129,11 @@ public class Game1 : Game
 		// TODO: Camera resizing. 
 
 		// TODO: Camera movement.
+		_camera.Position = Vector2.Lerp(
+			_camera.Position, 
+			player.WorldPosition, 
+			gameTime.GetElapsedSeconds() * 5
+		);
 
 		// TODO: Player movement in a more easonable manner. 
 

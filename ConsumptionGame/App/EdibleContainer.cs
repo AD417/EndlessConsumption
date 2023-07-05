@@ -13,15 +13,15 @@ public static class EdibleContainer {
     private static Random RNG = new();
 
     public static void Initialize() {
-        PlayingEdible = new(5F);
+        PlayingEdible = new(1F);
         Edibles = new List<Edible>();
 
         // for (int i = 0; i < 25; i++) CreateRandomEdible();
     }
 
     public static void CheckPopulation() {
-        if (Edibles.Count < 10) {
-            for (int i = 0; i < 1; i++) {
+        if (Edibles.Count < 20) {
+            for (int i = 0; i < 2; i++) {
                 CreateRandomEdible();
             }
         }
@@ -36,7 +36,7 @@ public static class EdibleContainer {
         position += PlayingEdible.WorldPosition;
 
         float size = RNG.NextSingle() * PlayingEdible.Size;
-        if (RNG.Next() % 2 == 1) size *= 10;
+        if (RNG.Next() % 3 == 1) size *= 10;
         size += 1.0F;
 
         Edibles.Add(new Edible(size, position));
