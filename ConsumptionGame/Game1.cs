@@ -16,7 +16,7 @@ public class Game1 : Game
 {
 	private GraphicsDeviceManager _graphics;
 	private SpriteBatch _spriteBatch;
-	private OrthographicCamera _camera;
+	private RescalingCamera _camera;
 	
 	/// <summary>
 	/// Stores the window dimensions in a rectangle object for easy use
@@ -63,9 +63,7 @@ public class Game1 : Game
 		)
 #endif
 		#endregion
-		_camera = new OrthographicCamera(viewport);
-		_camera.Zoom = 50;
-		System.Console.WriteLine(EdibleContainer.PlayingEdible.Size);
+		_camera = new RescalingCamera(viewport);
 		// TODO: Add your initialization logic here
 
 		windowSize = GraphicsDevice.Viewport.Bounds;
@@ -83,6 +81,13 @@ public class Game1 : Game
 
 		Asset.Player = Content.Load<Texture2D>("PlayerCircle");
 		Asset.Edible = Content.Load<Texture2D>("Edible");
+	}
+
+	protected void Restart() {
+		EdibleContainer.Initialize();
+		_camera.Range = 10F;
+		_camera.TargetRange = 10F;
+		_camera.Position = Vector2.Zero;
 	}
 
 	/// <summary>
@@ -113,20 +118,39 @@ public class Game1 : Game
 				if (player.Size > e.Size) {
 					// *nom*
 					System.Console.WriteLine("NOM");
-					float invDivisor = 2 / MathF.Pow(player.Size / e.Size, 0.9F);
+					float invDivisor = 10 / MathF.Pow(player.Size / e.Size, 0.9F);
 					float sizeFactor = Math.Min(1, MathF.Pow(0.9F, MathF.Log10(player.Size)));
 					player.Size += e.Size * 0.1F * invDivisor * e.Nutrition * sizeFactor;
 					EdibleContainer.Edibles.RemoveAt(i);
 				} else {
 					System.Console.WriteLine("OW");
-					System.Console.WriteLine(gameTime.GetElapsedSeconds());
-					player.Size -= e.Size * gameTime.GetElapsedSeconds();
-					System.Console.WriteLine(player.Size);
+					player.Size -= e.Size * gameTime.GetElapsedSeconds() * 0.5F;
 				}
 			}
 		}
 
 		// TODO: Camera resizing. 
+		// player.Size / _camera.Range >= 200; 
+		// player.Size > 200 * Range ==== size > range / 4
+		System.Console.WriteLine(_camera.TargetRange);
+		System.Console.WriteLine(_camera.Range);
+		System.Console.WriteLine(player.Size);
+		System.Console.WriteLine();
+		if (player.Size > 125 * _camera.TargetRange) {
+			System.Console.WriteLine("Blob too beeg");
+			_camera.TargetRange *= 3;
+			for (int i = 0; i < 200; i++) EdibleContainer.CreateRandomEdible();
+		}
+		if (player.Size < 20 * _camera.TargetRange) {
+			System.Console.WriteLine("Blob too smol");
+			_camera.TargetRange *= 0.3333F;
+			for (int i = 0; i < 200; i++) EdibleContainer.CreateRandomEdible();
+		}
+
+		_camera.Range *= MathF.Pow(
+			_camera.TargetRange / _camera.Range, 
+			MathF.Pow(0.05F, 60.0F * gameTime.GetElapsedSeconds())
+		);
 
 		// TODO: Camera movement.
 		_camera.Position = Vector2.Lerp(
@@ -140,7 +164,7 @@ public class Game1 : Game
 
 		KeyboardState keys = Keyboard.GetState();
 
-		if (keys.IsKeyDown(Keys.R) || player.isDead) EdibleContainer.Initialize();
+		if (keys.IsKeyDown(Keys.R) || player.isDead) Restart();
 
 		if (keys.IsKeyDown(Keys.W) || keys.IsKeyDown(Keys.Up)) player.Move(0, -player.Size * 0.1F);
 		if (keys.IsKeyDown(Keys.S) || keys.IsKeyDown(Keys.Down)) player.Move(0, player.Size * 0.1F);
